@@ -20,13 +20,32 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         scoreLabel.text = "Get Ready!";
-//        updateUI();
+        updateUI();
+    }
+    
+    func updateUI() -> Void {
+        questionLabel.text = quizBrain.getQuestionText();
+        trueButton.backgroundColor = UIColor.clear;
+        falseButton.backgroundColor = UIColor.clear;
+        progressBar.progress = quizBrain.getProgress();
+    }
+    
+    @IBAction func answerButtonPressed(_ sender: UIButton) {
+        let userAnswer = sender.currentTitle!;
+        let userGotItRight = quizBrain.checkAnswer(userAnswer);
+        
+        if (userGotItRight) {
+            sender.backgroundColor = UIColor.green;
+        } else {
+            sender.backgroundColor = UIColor.red;
+        }
+        scoreLabel.text = "Score: \(quizBrain.getCorrect())";
+        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { timer in
+            self.quizBrain.nextQuestion();
+            self.updateUI();
+        }
     }
     
     
-    
-   
-
-
 }
 
