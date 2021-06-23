@@ -32,16 +32,17 @@ struct QuizBrain {
     // the number of questions answered correctly
     var correctCounter: Int = 0;
     
-    mutating func checkAnswer(_ userAnswer: String) -> Bool {
+    var gameOver: Bool = false;
+    
+    mutating func checkAnswer(_ userAnswer: String) -> [Bool] {
         let actualAnswer = quiz[questionNumber].answer;
         if (actualAnswer == userAnswer) {
-            if (questionNumber + 1 < quiz.count) {
-                correctCounter += 1;
-            } else {
-                correctCounter = 0;
-            }
+            correctCounter += 1;
         }
-        return userAnswer == actualAnswer;
+        if (questionNumber + 1 == quiz.count) {
+            gameOver = true;
+        }
+        return [userAnswer == actualAnswer, gameOver]
     };
     
     func getQuestionText() -> String {
