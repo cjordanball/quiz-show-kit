@@ -19,6 +19,7 @@ class ViewController: UIViewController {
     var quizBrain = QuizBrain();
     
     override func viewDidLoad() {
+        super.viewDidLoad();
         scoreLabel.text = "Get Ready!";
         updateUI();
     }
@@ -26,7 +27,9 @@ class ViewController: UIViewController {
     func updateUI() -> Void {
         questionLabel.text = quizBrain.getQuestionText();
         trueButton.backgroundColor = UIColor.clear;
+        trueButton.layer.cornerRadius = 20;
         falseButton.backgroundColor = UIColor.clear;
+        falseButton.layer.cornerRadius = 20;
         progressBar.progress = quizBrain.getProgress();
     }
     
@@ -34,7 +37,7 @@ class ViewController: UIViewController {
         let userAnswer = sender.currentTitle!;
         let userGotItRight = quizBrain.checkAnswer(userAnswer);
         
-        if (userGotItRight) {
+        if (userGotItRight[0]) {
             sender.backgroundColor = UIColor.green;
         } else {
             sender.backgroundColor = UIColor.red;
@@ -42,7 +45,17 @@ class ViewController: UIViewController {
         scoreLabel.text = "Score: \(quizBrain.getCorrect())";
         Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { timer in
             self.quizBrain.nextQuestion();
-            self.updateUI();
+            if (!userGotItRight[1]) {
+                self.updateUI();
+            }
+        }
+        if (userGotItRight[1]) {
+            self.scoreLabel.text = "Game Over"
+            questionLabel.text = "Nice Effort: You got \(quizBrain.getCorrect()) questions out of \(quizBrain.quiz.count) correct!"
+            
+            trueButton.removeFromSuperview();
+            falseButton.removeFromSuperview();
+            
         }
     }
     
